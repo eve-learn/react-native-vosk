@@ -45,11 +45,15 @@ public final class VoskModel {
         
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let modelURL = documentsDirectory.appendingPathComponent(name)
-        if FileManager.default.fileExists(atPath: modelURL.path) {
+        var isDirectory: ObjCBool = false
+        if FileManager.default.fileExists(atPath: directoryURL.path, isDirectory: &isDirectory) && isDirectory.boolValue {
             // File exists, you can read its contents or perform other operations
             do {
-                let fileContents = try String(contentsOf: fileURL)
-                print("File contents: \(fileContents)")
+                let directoryContents = try FileManager.default.contentsOfDirectory(at: directoryURL, includingPropertiesForKeys: nil)
+                 for fileURL in directoryContents {
+                    print("File: \(fileURL.lastPathComponent)")
+                    // Perform operations with each file URL as needed
+                }
                 // Load model from documents directory
                 model = vosk_model_new(modelURL.path)
                 let appBundle = Bundle(for: Self.self)
