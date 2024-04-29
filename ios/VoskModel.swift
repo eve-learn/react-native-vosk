@@ -45,27 +45,24 @@ public final class VoskModel {
         
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let modelURL = documentsDirectory.appendingPathComponent(name)
-            if FileManager.default.fileExists(atPath: modelURL.path) {
-                // File exists, you can read its contents or perform other operations
-                do {
-                    let fileContents = try String(contentsOf: fileURL)
-                    print("File contents: \(fileContents)")
-
-                    // Load model from documents directory
-                    model = vosk_model_new(modelURL.path)
-
-                    let appBundle = Bundle(for: Self.self)
-
-                    // Get the URL to the spk model inside this pod
-                    if let spkModelPath = appBundle.path(forResource: "vosk-model-spk-0.4", ofType: nil) {
-                        spkModel = vosk_spk_model_new(spkModelPath)
-                    }
-                } catch {
-                    print("Error reading file: \(error.localizedDescription)")
+        if FileManager.default.fileExists(atPath: modelURL.path) {
+            // File exists, you can read its contents or perform other operations
+            do {
+                let fileContents = try String(contentsOf: fileURL)
+                print("File contents: \(fileContents)")
+                // Load model from documents directory
+                model = vosk_model_new(modelURL.path)
+                let appBundle = Bundle(for: Self.self)
+                // Get the URL to the spk model inside this pod
+                if let spkModelPath = appBundle.path(forResource: "vosk-model-spk-0.4", ofType: nil) {
+                    spkModel = vosk_spk_model_new(spkModelPath)
                 }
-            } else {
-                print("File does not exist.")
+            } catch {
+                print("Error reading file: \(error.localizedDescription)")
             }
+        } else {
+            print("File does not exist.")
+        }
         
     }
     
